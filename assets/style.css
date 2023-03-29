@@ -1,0 +1,13 @@
+main {
+    margin: 0;
+    padding: 0;
+}
+
+#current-conditions {
+    padding-left: 10px;
+}
+
+#submit {
+    margin-top: 10px;
+    width: 100%;
+}
