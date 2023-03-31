@@ -11,3 +11,14 @@ main {
     margin-top: 10px;
     width: 100%;
 }
+
+.cards {
+    display: flex;
+}
+
+.day-card {
+    background-color: blue;
+    color: white;
+    padding: 5px;
+    margin-right: 10px;
+}
