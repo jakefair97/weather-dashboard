@@ -14,11 +14,12 @@ main {
 
 .cards {
     display: flex;
+    justify-content: space-between;
 }
 
 .day-card {
     background-color: blue;
     color: white;
-    padding: 5px;
-    margin-right: 10px;
+    padding: 10px;
+    width: 19%;
 }

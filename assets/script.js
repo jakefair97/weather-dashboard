@@ -62,35 +62,36 @@ fetch(geoCode)
         }
         console.log(forecast);
 
-        var dayCard = document.createElement("div");
-        dayCard.setAttribute("class", "day-card");
-        var date = document.createElement("div");
-        date.setAttribute("class", "d-block");
-        date.innerHTML = dayjs.unix(forecast[0].dt).format('M/DD/YYYY')
-        
-        dayCard.appendChild(date);
+        for (let i = 0; i < forecast.length; i++) {
+            var dayCard = document.createElement("div");
+            dayCard.setAttribute("class", "day-card");
+            var date = document.createElement("h4");
+            date.setAttribute("class", "d-block");
+            date.innerHTML = dayjs.unix(forecast[i].dt).format('M/DD/YYYY')
+            
+            dayCard.appendChild(date);
 
-        var icon = forecast[0].weather[0].icon;
-        var iconPic = "http://openweathermap.org/img/w/"+icon+".png";
-        
-        var iconEl = document.createElement('img');
-        iconEl.setAttribute('src', iconPic);
-        dayCard.appendChild(iconEl);
+            var icon = forecast[i].weather[0].icon;
+            var iconPic = "http://openweathermap.org/img/w/"+icon+".png";
+            
+            var iconEl = document.createElement('img');
+            iconEl.setAttribute('src', iconPic);
+            dayCard.appendChild(iconEl);
 
-        var temp = document.createElement("p");
-        temp.innerHTML = "Temp: " + forecast[0].main.temp + "°F";
-        dayCard.appendChild(temp);
+            var temp = document.createElement("p");
+            temp.innerHTML = "Temp: " + forecast[i].main.temp + "°F";
+            dayCard.appendChild(temp);
 
-        var wind = document.createElement("p");
-        wind.innerHTML = "Wind: " + forecast[0].wind.speed + " MPH";
-        dayCard.appendChild(wind);
+            var wind = document.createElement("p");
+            wind.innerHTML = "Wind: " + forecast[i].wind.speed + " MPH";
+            dayCard.appendChild(wind);
 
-        var humidity = document.createElement("p");
-        humidity.innerHTML = "Humidity: " + forecast[0].main.humidity + "%";
-        dayCard.appendChild(humidity)
-        
-        cards[0].appendChild(dayCard);
-
+            var humidity = document.createElement("p");
+            humidity.innerHTML = "Humidity: " + forecast[i].main.humidity + "%";
+            dayCard.appendChild(humidity)
+            
+            cards[0].appendChild(dayCard);
+        }
 
     })
 })
