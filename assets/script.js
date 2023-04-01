@@ -1,25 +1,36 @@
 var API_KEY = "5592ab14c73d2e3c1705ad47c200a44e";
 
-var geoCode = "http://api.openweathermap.org/geo/1.0/direct?q=Austin&limit=1&appid="+API_KEY;
-
-var today = $("#current-conditions")
+var today = $("#current-conditions")[0];
 var forecast = $("#forecast")
-var cards = $("#cards")
+var cards = $("#cards")[0]
 var forecastBox = forecast[0];
+var citySearch = $("#city-search")[0]
+console.log(citySearch)
 console.log(forecastBox)
 
-var currentBox = today[0];
-console.log(today[0])
+console.log(today)
+
+citySearch.addEventListener("submit", displayWeather)
+
+function displayWeather(event) {
+    event.preventDefault();
+    while (today.hasChildNodes()) {
+        today.removeChild(today.firstChild);
+    }
+    var city = $('#city')[0].value
+    console.log(city.value)
+    var geoCode = "http://api.openweathermap.org/geo/1.0/direct?q="+city+"&limit=1&appid="+API_KEY;
 
 fetch(geoCode)
 .then(function(response) {
     return response.json();
 })
 .then(function(data) {
-    let lat = data[0].lat
-    let lon = data[0].lon
-    let current = "http://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&units=imperial&appid="+API_KEY
-    let fiveDay = "http://api.openweathermap.org/data/2.5/forecast?lat="+lat+"&lon="+lon+"&units=imperial&appid="+API_KEY
+    console.log(data)
+    var lat = data[0].lat
+    var lon = data[0].lon
+    var current = "http://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&units=imperial&appid="+API_KEY
+    var fiveDay = "http://api.openweathermap.org/data/2.5/forecast?lat="+lat+"&lon="+lon+"&units=imperial&appid="+API_KEY
     fetch(current)
     .then(function(response) {
         return response.json();
@@ -28,27 +39,27 @@ fetch(geoCode)
         var icon = data.weather[0].icon
         var iconPic = "http://openweathermap.org/img/w/"+icon+".png"
         console.log(data)
-        console.log(dayjs.unix(data.dt).format('M/DD/YYYY'))
+        console.log(dayjs.unix(data.dt).format('M/D/YYYY'))
 
         var locDate = document.createElement("h2");
-        locDate.innerHTML = "Austin ("+dayjs().format('M/DD/YYYY')+")";
+        locDate.innerHTML = city+ " ("+dayjs().format('M/D/YYYY')+")";
         var iconEl = document.createElement("img");
         iconEl.setAttribute("src", iconPic)
         locDate.appendChild(iconEl);
 
-        currentBox.appendChild(locDate)
+        today.appendChild(locDate)
 
         var temp = document.createElement("p");
         temp.innerHTML = "Temp: " + data.main.temp + "°F";
-        currentBox.appendChild(temp);
+        today.appendChild(temp);
 
         var wind = document.createElement("p");
         wind.innerHTML = "Wind: " + data.wind.speed + " MPH";
-        currentBox.appendChild(wind);
+        today.appendChild(wind);
 
         var humidity = document.createElement("p");
         humidity.innerHTML = "Humidity: " + data.main.humidity + "%";
-        currentBox.appendChild(humidity)
+        today.appendChild(humidity)
     })
     fetch(fiveDay)
     .then(function(response) {
@@ -62,12 +73,16 @@ fetch(geoCode)
         }
         console.log(forecast);
 
+        while (cards.hasChildNodes()) {
+            cards.removeChild(cards.firstChild);
+        }
+
         for (let i = 0; i < forecast.length; i++) {
             var dayCard = document.createElement("div");
             dayCard.setAttribute("class", "day-card");
             var date = document.createElement("h4");
             date.setAttribute("class", "d-block");
-            date.innerHTML = dayjs.unix(forecast[i].dt).format('M/DD/YYYY')
+            date.innerHTML = dayjs.unix(forecast[i].dt).format('M/D/YYYY')
             
             dayCard.appendChild(date);
 
@@ -90,11 +105,12 @@ fetch(geoCode)
             humidity.innerHTML = "Humidity: " + forecast[i].main.humidity + "%";
             dayCard.appendChild(humidity)
             
-            cards[0].appendChild(dayCard);
+            cards.appendChild(dayCard);
         }
 
     })
 })
+}
 
 // fetch(fiveDay)
 // .then(function(response) {
