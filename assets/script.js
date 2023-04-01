@@ -38,7 +38,7 @@ function displayWeather(city) {
     addHistory(city);
     localStorage.setItem(city, city)
     console.log(city)
-    var geoCode = "http://api.openweathermap.org/geo/1.0/direct?q="+city+"&limit=1&appid="+API_KEY;
+    var geoCode = "https://api.openweathermap.org/geo/1.0/direct?q="+city+"&limit=1&appid="+API_KEY;
 
     fetch(geoCode)
     .then(function(response) {
@@ -48,8 +48,8 @@ function displayWeather(city) {
         console.log(data)
         var lat = data[0].lat
         var lon = data[0].lon
-        var currentWeather = "http://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&units=imperial&appid="+API_KEY
-        var fiveDay = "http://api.openweathermap.org/data/2.5/forecast?lat="+lat+"&lon="+lon+"&units=imperial&appid="+API_KEY
+        var currentWeather = "https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&units=imperial&appid="+API_KEY
+        var fiveDay = "https://api.openweathermap.org/data/2.5/forecast?lat="+lat+"&lon="+lon+"&units=imperial&appid="+API_KEY
 
         fetch(currentWeather)
         .then(function(response) {
@@ -57,7 +57,7 @@ function displayWeather(city) {
         })
         .then(function(data) {
             var icon = data.weather[0].icon
-            var iconPic = "http://openweathermap.org/img/w/"+icon+".png"
+            var iconPic = "https://openweathermap.org/img/w/"+icon+".png"
             console.log(data)
             console.log(dayjs.unix(data.dt).format('M/D/YYYY'))
 
@@ -109,7 +109,7 @@ function displayWeather(city) {
                 dayCard.appendChild(date);
 
                 var icon = forecast[i].weather[0].icon;
-                var iconPic = "http://openweathermap.org/img/w/"+icon+".png";
+                var iconPic = "https://openweathermap.org/img/w/"+icon+".png";
                 
                 var iconEl = document.createElement('img');
                 iconEl.setAttribute('src', iconPic);
