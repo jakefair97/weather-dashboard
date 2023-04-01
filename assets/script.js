@@ -7,8 +7,6 @@ var forecastBox = forecast[0];
 var citySearch = $("#city-search")[0];
 var pastSearches = $("#past-searches")[0];
 var forecastHead = $("#forecast-head")[0];
-console.log(pastSearches)
-
 
 citySearch.addEventListener("submit", getSearchCity)
 
@@ -17,7 +15,6 @@ pastSearches.addEventListener("click", getprevCity);
 function getSearchCity(event) {
     event.preventDefault();
     var city = $('#city')[0].value;
-    console.log(city)
     if (city === '') {
         return
     }
@@ -27,7 +24,9 @@ function getSearchCity(event) {
 function getprevCity(event) {
     event.preventDefault();
     var city = event.target.innerHTML
-    console.log(city);
+    if (city[0] == '<') {
+        return
+    }
     displayWeather(city)
 }
 
@@ -37,7 +36,6 @@ function displayWeather(city) {
     }
     addHistory(city);
     localStorage.setItem(city, city)
-    console.log(city)
     var geoCode = "https://api.openweathermap.org/geo/1.0/direct?q="+city+"&limit=1&appid="+API_KEY;
 
     fetch(geoCode)
@@ -45,7 +43,6 @@ function displayWeather(city) {
         return response.json();
     })
     .then(function(data) {
-        console.log(data)
         var lat = data[0].lat
         var lon = data[0].lon
         var currentWeather = "https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&units=imperial&appid="+API_KEY
@@ -58,8 +55,6 @@ function displayWeather(city) {
         .then(function(data) {
             var icon = data.weather[0].icon
             var iconPic = "https://openweathermap.org/img/w/"+icon+".png"
-            console.log(data)
-            console.log(dayjs.unix(data.dt).format('M/D/YYYY'))
 
             var locDate = document.createElement("h2");
             locDate.innerHTML = city+ " ("+dayjs().format('M/D/YYYY')+")";
@@ -87,12 +82,10 @@ function displayWeather(city) {
             return response.json();
         })
         .then(function(data) {
-            console.log(data.list);
             var forecast = [];
             for (var i = 6; i < data.list.length; i += 8) {
                 forecast.push(data.list[i])
             }
-            console.log(forecast);
 
             while (cards.hasChildNodes()) {
                 cards.removeChild(cards.firstChild);
