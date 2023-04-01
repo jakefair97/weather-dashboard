@@ -6,19 +6,36 @@ var cards = $("#cards")[0]
 var forecastBox = forecast[0];
 var citySearch = $("#city-search")[0];
 var pastSearches = $("#past-searches")[0];
-console.log(citySearch)
-console.log(forecastBox)
+var forecastHead = $("#forecast-head")[0];
+console.log(pastSearches)
 
-console.log(today)
 
-citySearch.addEventListener("submit", displayWeather)
+citySearch.addEventListener("submit", getSearchCity)
 
-function displayWeather(event) {
+pastSearches.addEventListener("click", getprevCity);
+
+function getSearchCity(event) {
     event.preventDefault();
+    var city = $('#city')[0].value;
+    console.log(city)
+    if (city === '') {
+        return
+    }
+    displayWeather(city)
+}
+
+function getprevCity(event) {
+    event.preventDefault();
+    var city = event.target.innerHTML
+    console.log(city);
+    displayWeather(city)
+}
+
+function displayWeather(city) {
     while (today.hasChildNodes()) {
         today.removeChild(today.firstChild);
     }
-    var city = $('#city')[0].value
+    addHistory(city);
     localStorage.setItem(city, city)
     console.log(city)
     var geoCode = "http://api.openweathermap.org/geo/1.0/direct?q="+city+"&limit=1&appid="+API_KEY;
@@ -31,9 +48,10 @@ function displayWeather(event) {
         console.log(data)
         var lat = data[0].lat
         var lon = data[0].lon
-        var current = "http://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&units=imperial&appid="+API_KEY
+        var currentWeather = "http://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&units=imperial&appid="+API_KEY
         var fiveDay = "http://api.openweathermap.org/data/2.5/forecast?lat="+lat+"&lon="+lon+"&units=imperial&appid="+API_KEY
-        fetch(current)
+
+        fetch(currentWeather)
         .then(function(response) {
             return response.json();
         })
@@ -63,6 +81,7 @@ function displayWeather(event) {
             humidity.innerHTML = "Humidity: " + data.main.humidity + "%";
             today.appendChild(humidity)
         })
+
         fetch(fiveDay)
         .then(function(response) {
             return response.json();
@@ -78,6 +97,7 @@ function displayWeather(event) {
             while (cards.hasChildNodes()) {
                 cards.removeChild(cards.firstChild);
             }
+            forecastHead.innerHTML = "5-day Forecast:"
 
             for (let i = 0; i < forecast.length; i++) {
                 var dayCard = document.createElement("div");
@@ -114,6 +134,18 @@ function displayWeather(event) {
     })
 }
 
+function addHistory(city) {
+    if (localStorage.getItem(city) === null) {
+        var prevCity = document.createElement("button");
+        prevCity.setAttribute('type', 'button');
+        prevCity.style.marginBottom = "15px";
+        prevCity.innerHTML = city
+        pastSearches.appendChild(prevCity);
+    }
+    else {
+        return
+    }
+}
 function init() {
     if (localStorage.length > 0) {
         for (var city in localStorage) {
